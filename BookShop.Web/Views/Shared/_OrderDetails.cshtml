@@ -1,0 +1,488 @@
+﻿@model BookShop.Application.ViewModels.Order.OrderResponseVM
+@using BookShop.Domain.Enums
+
+@{
+    var isCod = Model.PaymentMethod == PaymentMethod.CashOnDelivery;
+
+    var orderStatusClass = Model.OrderStatus switch
+    {
+        OrderStatus.Pending =>
+            "bg-warning-subtle text-warning-emphasis",
+
+        OrderStatus.Confirmed =>
+            "bg-success-subtle text-success",
+
+        OrderStatus.Packed =>
+            "bg-info-subtle text-info-emphasis",
+
+        OrderStatus.Delivered =>
+            "bg-success-subtle text-success",
+
+        OrderStatus.Cancelled =>
+            "bg-danger-subtle text-danger-emphasis",
+
+        _ => "bg-secondary-subtle text-secondary"
+    };
+
+    var paymentStatusClass = isCod
+        ? "bg-warning-subtle text-warning-emphasis"
+        : "bg-success-subtle text-success";
+
+    var paymentIcon = isCod
+        ? "bi-cash-coin"
+        : "bi-credit-card";
+
+    var paymentMethodText = isCod
+        ? "Cash on Delivery"
+        : "Online Payment";
+}
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="row align-items-center mb-4 pb-3 border-bottom">
+
+        <div class="col-md-6 mb-3 mb-md-0">
+
+            <h2 class="fw-bold mb-1">
+                Order Details
+            </h2>
+
+            <span class="fw-bold">
+                Order Reference:
+            </span>
+
+            <span class="small fw-bold">
+                #@Model.Id
+            </span>
+
+        </div>
+
+        <div class="col-md-6 text-md-end">
+
+            <div class="d-flex justify-content-md-end gap-2
+                align-items-center flex-wrap">
+
+                <!-- Order Status -->
+                <div class="text-start text-md-end px-3 py-2
+                    bg-white border rounded shadow-sm">
+
+                    <span class="d-block small text-muted
+                        text-uppercase fw-bold">
+                        Order Status
+                    </span>
+
+                    <span class="badge @orderStatusClass fs-6 mt-1">
+                        @Model.OrderStatus
+                    </span>
+
+                </div>
+
+                <!-- Payment Status -->
+                <div class="text-start text-md-end px-3 py-2
+                    bg-white border rounded shadow-sm">
+
+                    <span class="d-block small text-muted
+                        text-uppercase fw-bold">
+                        Payment Status
+                    </span>
+
+                    <span class="badge @paymentStatusClass fs-6 mt-1">
+                        @Model.PaymentStatus
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Order Information -->
+    <div class="card border-0 shadow-sm rounded-4 my-3 bg-light">
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <!-- Order Date -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="bg-white p-3 rounded-circle
+                            border shadow-sm text-primary">
+
+                            <i class="bi bi-calendar-check fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="d-block small text-muted
+                                text-uppercase fw-bold">
+                                Order Date
+                            </span>
+
+                            <span class="fw-medium text-dark">
+                                @Model.OrderDate.ToString(
+                                    "MMM dd, yyyy hh:mm tt")
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Payment Date -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="bg-white p-3 rounded-circle
+                            border shadow-sm text-success">
+
+                            <i class="bi bi-credit-card fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="d-block small text-muted
+                                text-uppercase fw-bold">
+                                Payment Date
+                            </span>
+
+                            <span class="fw-medium text-dark">
+
+                                @if (Model.PaymentDate.HasValue)
+                                {
+                                    @Model.PaymentDate.Value.ToString(
+                                        "MMM dd, yyyy hh:mm tt")
+                                }
+                                else
+                                {
+                                    <span>Not Paid</span>
+                                }
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Payment Method -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="bg-white p-3 rounded-circle
+                            border shadow-sm text-primary">
+
+                            <i class="bi @paymentIcon fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="d-block small text-muted
+                                text-uppercase fw-bold">
+                                Payment Method
+                            </span>
+
+                            <span class="fw-medium text-dark">
+                                @paymentMethodText
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- Purchased Items -->
+        <div class="col-xl-8">
+
+            <div class="card border-0 shadow-sm rounded-4
+                overflow-hidden mb-4">
+
+                <div class="card-header bg-white p-4 border-0">
+
+                    <div class="d-flex justify-content-between
+                        align-items-center">
+
+                        <h5 class="fw-bold mb-0">
+                            Purchased Items
+                        </h5>
+
+                        <span class="badge bg-light text-dark
+                            border px-3 py-2 rounded-pill">
+
+                            @Model.TotalItems Items
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover
+                            align-middle mb-0">
+
+                            <thead class="table-light text-uppercase
+                                fs-7 text-muted">
+
+                                <tr>
+
+                                    <th class="py-3 ps-4">
+                                        Item Description
+                                    </th>
+
+                                    <th class="py-3 text-center">
+                                        Unit Price
+                                    </th>
+
+                                    <th class="py-3 text-center">
+                                        Qty
+                                    </th>
+
+                                    <th class="py-3 text-end pe-4">
+                                        Total
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+
+                                        <td class="ps-4 py-3">
+
+                                            <div class="d-flex
+                                                align-items-center gap-3">
+
+                                                <img src="@item.BookImageUrl"
+                                                     alt="@item.BookTitle"
+                                                     class="rounded-3 border object-fit-cover"
+                                                     style="width:55px;height:55px;" />
+
+                                                <span class="fw-semibold text-dark">
+                                                    @item.BookTitle
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+                                        <td class="text-center text-secondary">
+                                            $@item.Price.ToString("F2")
+                                        </td>
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-light
+                                                text-dark border
+                                                px-2 py-1">
+
+                                                @item.Quantity
+
+                                            </span>
+
+                                        </td>
+
+                                        <td class="text-end pe-4
+                                            fw-bold text-dark">
+
+                                            $@item.SubTotal.ToString("F2")
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sidebar -->
+        <div class="col-xl-4">
+
+            <!-- Delivery Details -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                <div class="card-header bg-white p-4 border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Delivery Details
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4 pb-4 pt-0">
+
+                    <div class="p-3 bg-light rounded-3 mb-3">
+
+                        <span class="d-block fw-bold text-dark mb-1">
+                            @Model.FirstName @Model.LastName
+                        </span>
+
+                        <a href="mailto:@Model.Email"
+                           class="text-decoration-none text-muted
+                            small d-block mb-1">
+
+                            <i class="bi bi-envelope me-1"></i>
+                            @Model.Email
+
+                        </a>
+
+                        <span class="text-muted small d-block">
+
+                            <i class="bi bi-telephone me-1"></i>
+                            @Model.Phone1
+
+                            @if (!string.IsNullOrEmpty(Model.Phone2))
+                            {
+                                <span>/ @Model.Phone2</span>
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <span class="d-block small text-muted
+                            text-uppercase fw-bold mb-1">
+
+                            Shipping Address
+
+                        </span>
+
+                        <p class="text-dark small mb-0 ps-3
+                            border-start border-3 border-primary">
+
+                            @Model.Street <br />
+                            @Model.City, @Model.PostalCode
+
+                        </p>
+
+                    </div>
+
+
+                    @if (!string.IsNullOrEmpty(Model.DeliveryInstructions))
+                    {
+                        <div class="alert alert-warning border-0
+                            bg-warning bg-opacity-10
+                            small mb-0 rounded-3">
+
+                            <div class="fw-bold mb-1
+                                text-warning-emphasis">
+
+                                <i class="bi bi-info-circle me-1"></i>
+                                Special Instructions:
+
+                            </div>
+
+                            <p class="mb-0 text-dark">
+                                @Model.DeliveryInstructions
+                            </p>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- Payment Summary -->
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-header bg-white p-4 border-0">
+
+                    <h5 class="fw-bold mb-0">
+                        Payment Summary
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4 pb-4 pt-0">
+
+                    <div class="d-flex justify-content-between
+                        mb-2 text-secondary">
+
+                        <span>Subtotal</span>
+
+                        <span class="fw-medium text-dark">
+                            $@Model.TotalPrice.ToString("F2")
+                        </span>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between
+                        mb-3 text-secondary">
+
+                        <span>Delivery Fee</span>
+
+                        <span class="fw-medium text-dark">
+                            $@Model.DeliveryFee.ToString("F2")
+                        </span>
+
+                    </div>
+
+
+                    <hr class="text-muted opacity-25 my-3" />
+
+
+                    <div class="d-flex justify-content-between
+                        align-items-center">
+
+                        <span class="fw-bold text-dark">
+                            Grand Total
+                        </span>
+
+                        <span class="fw-bold fs-3 text-primary">
+                            $@Model.GrandTotal.ToString("F2")
+                        </span>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

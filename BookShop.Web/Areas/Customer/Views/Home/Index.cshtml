@@ -1,0 +1,280 @@
+﻿@model BookShop.Application.ViewModels.Common.HomePageResponseVM
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@* Slider Section *@
+<div class="position-relative overflow-hidden mb-5 text-white py-4 min-vh-75 d-flex align-items-center text-center">
+    <img src="~/Images/pexels-mehmet-34824141.jpg"
+         alt="Books and Library"
+         class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
+
+    <div class="container position-relative py-5">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-lg-8 col-xl-7">
+
+                <h1 class="display-3 fw-bold text-white lh-sm mb-3">
+                    Find Your Next <br />
+                    <span class="text-warning">Great Book</span>
+                </h1>
+
+                <p class="fs-5 text-light opacity-75 mb-3">
+                    Explore our collection of inspiring stories, timeless classics,
+                    knowledge, and bestselling books — all in one place.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a asp-area="Customer"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       class="btn btn-warning text-dark px-4 py-3 rounded-pill shadow-sm fw-bold">
+                        Browse Books
+                        <i class="bi bi-book ms-2"></i>
+                    </a>
+
+                    <a asp-area="Customer"
+                       asp-controller="ShoppingCart"
+                       asp-action="Index"
+                       class="btn btn-outline-light px-4 py-3 rounded-pill shadow-sm fw-bold">
+                        View Cart
+                        <i class="bi bi-cart3 ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* New Arrivals Section *@
+@if (Model.NewArrivalBooks != null && Model.NewArrivalBooks.Any())
+{
+    <section class="container mb-5 py-4">
+        <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
+            <div>
+                <h3 class="fw-bold text-dark mb-1">New Arrivals</h3>
+                <p class="text-muted mb-0 small">Explore our latest curation of freshly dropped books and editions.</p>
+            </div>
+            <div class="d-flex gap-2 js-carousel-nav" id="new-arrivals-nav-container">
+                <button id="new-arrivals-prev" class="btn btn-outline-secondary rounded-circle p-0 customPrevBtn d-inline-flex align-items-center justify-content-center" aria-label="Previous" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button id="new-arrivals-next" class="btn btn-outline-secondary rounded-circle p-0 customNextBtn d-inline-flex align-items-center justify-content-center" aria-label="Next" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="owl-carousel owl-theme" id="newArrivalsCarousel">
+            @await Html.PartialAsync("_BookCard" , Model.NewArrivalBooks)
+        </div>
+    </section>
+}
+
+@* Authors Section *@
+@if (Model.Authors != null && Model.Authors.Any())
+{
+    <section class="container mb-5 py-4">
+        <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
+            <div>
+                <h3 class="fw-bold text-dark mb-1">Authors</h3>
+                <p class="text-muted mb-0 small">Discover your favorite writers and explore their collections.</p>
+            </div>
+            <div class="d-flex gap-2 js-carousel-nav" id="authors-nav-container">
+                <button id="authors-prev" class="btn btn-outline-secondary rounded-circle p-0 customPrevBtn d-inline-flex align-items-center justify-content-center" aria-label="Previous" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button id="authors-next" class="btn btn-outline-secondary rounded-circle p-0 customNextBtn d-inline-flex align-items-center justify-content-center" aria-label="Next" style="width: 36px; height: 36px;">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="owl-carousel owl-theme" id="authorsCarousel">
+            @foreach (var author in Model.Authors)
+            {
+                <div class="item text-center px-2">
+                    <a asp-area="Customer"
+                       asp-controller="Author"
+                       asp-action="Details"
+                       asp-route-id="@author.Id"
+                       class="text-decoration-none text-dark d-block">
+                        <div class="position-relative mx-auto mb-3 rounded-circle overflow-hidden shadow-sm bg-light" 
+                        style="width: 130px; height: 130px;">
+                            <img src="@(string.IsNullOrEmpty(author.ImageUrl) ? "/Images/default-user.jpg" : author.ImageUrl)"
+                                 alt="@author.Name"
+                                 class="w-100 h-100 object-fit-cover" />
+                        </div>
+                        <h6 class="fw-bold mb-1 text-dark text-truncate">@author.Name</h6>
+                    </a>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+
+@* Book Shop Benefits Section *@
+<section class="py-5 mb-5 border-bottom">
+    <div class="container">
+        <div class="row g-0 text-center">
+
+            <!-- Benefit 1 -->
+            <div class="col-6 col-lg-3">
+                <div class="px-4 py-3 border-end">
+                    <div class="mb-3">
+                        <span class="d-inline-flex align-items-center justify-content-center
+                            rounded-circle bg-warning bg-opacity-10 text-warning"
+                              style="width: 58px; height: 58px;">
+                            <i class="bi bi-book fs-4"></i>
+                        </span>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2">
+                        Curated Collection
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Discover books carefully selected for every reader.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Benefit 2 -->
+            <div class="col-6 col-lg-3">
+                <div class="px-4 py-3 border-end">
+                    <div class="mb-3">
+                        <span class="d-inline-flex align-items-center justify-content-center
+                            rounded-circle bg-warning bg-opacity-10 text-warning"
+                              style="width: 58px; height: 58px;">
+                            <i class="bi bi-truck fs-4"></i>
+                        </span>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2">
+                        Fast Delivery
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Get your favorite books delivered safely to your door.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Benefit 3 -->
+            <div class="col-6 col-lg-3">
+                <div class="px-4 py-3 border-end">
+                    <div class="mb-3">
+                        <span class="d-inline-flex align-items-center justify-content-center
+                            rounded-circle bg-warning bg-opacity-10 text-warning"
+                              style="width: 58px; height: 58px;">
+                            <i class="bi bi-shield-check fs-4"></i>
+                        </span>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2">
+                        Secure Shopping
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Enjoy a safe and secure checkout every time.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Benefit 4 -->
+            <div class="col-6 col-lg-3">
+                <div class="px-4 py-3">
+                    <div class="mb-3">
+                        <span class="d-inline-flex align-items-center justify-content-center
+                            rounded-circle bg-warning bg-opacity-10 text-warning"
+                              style="width: 58px; height: 58px;">
+                            <i class="bi bi-heart fs-4"></i>
+                        </span>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2">
+                        For Every Reader
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Fiction, history, business, and more — find your next read.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            // ==============================
+            // New Arrivals Carousel
+            // ==============================
+            var $newArrivalsCarousel = $('#newArrivalsCarousel');
+
+            if ($newArrivalsCarousel.length) {
+                $newArrivalsCarousel.owlCarousel({
+                    loop: false,
+                    margin: 15,
+                    nav: false,
+                    dots: false,
+                    autoplay: false,
+                    autoplayTimeout: 5000,
+                    autoplayHoverPause: true,
+                    responsive: {
+                        0: { items: 1 },
+                        576: { items: 2 },
+                        992: { items: 3 },
+                        1200: { items: 4 }
+                    }
+                });
+
+                $('#new-arrivals-prev').on('click', function() {
+                    $newArrivalsCarousel.trigger('prev.owl.carousel');
+                });
+
+                $('#new-arrivals-next').on('click', function() {
+                    $newArrivalsCarousel.trigger('next.owl.carousel');
+                });
+            }
+
+            // ==============================
+            // Authors Carousel
+            // ==============================
+            var $authorsCarousel = $('#authorsCarousel');
+
+            if ($authorsCarousel.length) {
+                $authorsCarousel.owlCarousel({
+                    loop: false,
+                    margin: 20,
+                    nav: false,
+                    dots: false,
+                    autoplay: false,
+                    autoplayTimeout: 5000,
+                    autoplayHoverPause: true,
+                    responsive: {
+                        0: { items: 2 },
+                        576: { items: 3 },
+                        768: { items: 4 },
+                        992: { items: 5 },
+                        1200: { items: 6 }
+                    }
+                });
+
+                $('#authors-prev').on('click', function() {
+                    $authorsCarousel.trigger('prev.owl.carousel');
+                });
+
+                $('#authors-next').on('click', function() {
+                    $authorsCarousel.trigger('next.owl.carousel');
+                });
+            }
+
+        });
+    </script>
+}

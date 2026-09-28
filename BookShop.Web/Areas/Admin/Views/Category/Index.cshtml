@@ -1,0 +1,120 @@
+﻿@model List<BookShop.Application.ViewModels.Category.CategoryResponseVM>
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-9">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+            <div class="card-header bg-white border-bottom border-light px-4 py-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h4 class="fw-bold text-dark mb-1">Categories</h4>
+                    <p class="text-muted small mb-0">Organize and manage your product catalog structure.</p>
+                </div>
+
+                <a asp-area="Admin" asp-controller="Category" asp-action="Add"
+                   class="btn btn-primary px-4 py-2 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>New Category</span>
+                </a>
+            </div>
+
+            <div class="card-body p-0">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-uppercase font-monospace text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                                <tr>
+                                    <th class="py-3 ps-4 border-0">Name</th>
+                                    <th class="py-3 text-end pe-4 border-0" style="width: 160px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var category in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <span class="fw-semibold text-dark d-block">@category.Name</span>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-end pe-4 py-3">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <a asp-area="Admin"
+                                                   asp-controller="Category"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@category.Id"
+                                                   class="btn btn-light btn-sm px-2 py-1 text-secondary"
+                                                   title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+
+                                                <form method="post"
+                                                      asp-area="Admin"
+                                                      asp-controller="Category"
+                                                      asp-action="Delete"
+                                                      asp-route-id="@category.Id"
+                                                      class="delete-form d-inline">
+                                                    <button type="submit"
+                                                            class="btn btn-light btn-sm px-2 py-1 text-danger delete-form"
+                                                            title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 px-3">
+                        <div class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center text-muted mb-3" style="width: 72px; height: 72px;">
+                            <i class="bi bi-folder-x fs-2"></i>
+                        </div>
+                        <h5 class="fw-semibold text-dark mb-1">No categories found</h5>
+                        <p class="text-muted small mb-4">Get started by creating your first product category.</p>
+                        <a asp-action="Add" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm">
+                            <i class="bi bi-plus-lg me-1"></i> Add Category
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function() {
+
+            $('.delete-form').on('submit', function(e) {
+                e.preventDefault();
+                var form = this;
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this category.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then(function(result) {
+
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+
+                });
+            });
+        });
+    </script>
+}

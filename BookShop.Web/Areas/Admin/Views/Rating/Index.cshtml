@@ -1,0 +1,104 @@
+﻿@model List<BookShop.Application.ViewModels.Rating.RatingResponseVM>
+@using BookShop.Domain.Enums
+
+@{
+    var totalRatingsCount = Model.Count;
+}
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-6 col-12 text-center text-md-start mb-3 mb-md-0">
+        <span class="text-uppercase text-muted font-monospace small fw-bold">Operations Dashboard</span>
+        <h1 class="h2 text-dark fw-semibold mb-1">Ratings & Reviews</h1>
+        <p class="text-secondary small mb-0">Monitor, moderate, and manage customer product feedback.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+    <div class="card-body p-0">
+        @if (totalRatingsCount == 0)
+        {
+            <div class="text-center py-5 my-4">
+                <div class="bg-light d-inline-block p-4 rounded-circle mb-3">
+                    <i class="bi bi-star text-muted display-6"></i>
+                </div>
+                <h5 class="text-dark fw-bold">No Ratings found</h5>
+                <p class="text-muted small mx-auto">
+                    We couldn't locate any reviews on file.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr class="border-bottom border-info text-muted text-uppercase font-monospace bg-light">
+                            <th class="ps-4 py-3">Book Title</th>
+                            <th class="py-3">Customer</th>
+                            <th class="py-3 text-center">Score</th>
+                            <th class="py-3">Review</th>
+                            <th class="py-3">Created At</th>
+                            <th class="py-3 text-center" style="min-width: 100px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rating in Model)
+                        {
+                            <tr class="align-middle border-bottom border-light">
+                                <td class="ps-4 py-3 fw-bold text-dark">
+                                    <a asp-area="" asp-controller="Book" asp-action="Details" asp-route-id="@rating.BookId" target="_blank" class="text-decoration-none text-dark">
+                                        @rating.BookTitle
+                                    </a>
+                                </td>
+                                <td class="text-secondary">
+                                    @rating.FirstName @rating.LastName
+                                </td>
+                                <td class="text-center font-monospace">
+                                    <span class="badge bg-warning text-dark px-2 py-1 rounded-2 fw-semibold">
+                                        <i class="bi bi-star-fill me-1"></i> @rating.Value / 5
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted text-wrap" style="max-width: 500px; display: inline-block;">
+                                        @(string.IsNullOrEmpty(rating.Review) ? "No written review." : rating.Review)
+                                    </span>
+                                </td>
+                                <td class="text-secondary font-monospace">
+                                    @rating.CreatedAt.ToString("MMM dd, yyyy")
+                                    <span class="d-block text-muted small">@rating.CreatedAt.ToString("t")</span>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-area="Admin" asp-controller="Rating" asp-action="UpdateStatus" method="post">
+                                        <input type="hidden" name="id" value="@rating.Id" />
+                                        <select name="status" class="form-select form-select-sm rounded-pill font-monospace fw-semibold px-3 rating-status-select">
+                                            @foreach (RatingStatus status in Enum.GetValues(typeof(RatingStatus)))
+                                            {
+                                                <option value="@status"
+                                                        selected="@(rating.Status == status ? "selected" : null)">
+                                                    @status.ToString()
+                                                </option>
+                                            }
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            $('.rating-status-select').on('change', function() {
+                $(this).closest('form').submit();
+            });
+
+        });
+    </script>
+}

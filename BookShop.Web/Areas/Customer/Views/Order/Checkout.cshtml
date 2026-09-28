@@ -1,0 +1,210 @@
+﻿@using BookShop.Domain.Enums
+@model BookShop.Application.ViewModels.Order.OrderCreateVM
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container py-5 my-2">
+    <!-- Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2 text-uppercase fs-7 tracking-wider" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index"
+                           class="text-decoration-none text-secondary">Cart</a>
+                    </li>
+                    <li class="breadcrumb-item active text-dark fw-medium" aria-current="page">Checkout</li>
+                </ol>
+            </nav>
+            <h1 class="h2 fw-bold text-dark tracking-tight">Checkout</h1>
+        </div>
+    </div>
+
+    <form asp-area="Customer" asp-controller="Order" asp-action="Checkout" method="post" class="needs-validation" novalidate>
+        <div class="row g-4 g-lg-5">
+            <!-- Left Column: Forms -->
+            <div class="col-lg-7">
+
+                <!-- Section 1: Contact Information -->
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4 p-md-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-semibold me-3" style="width: 28px; height: 28px; font-size: 0.85rem;">1</div>
+                            <h2 class="h6 mb-0 text-dark fw-bold">Contact Information</h2>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label asp-for="FirstName" class="form-label text-secondary small fw-medium">First Name</label>
+                                <input asp-for="FirstName" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="John" />
+                                <span asp-validation-for="FirstName" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="LastName" class="form-label text-secondary small fw-medium">Last Name</label>
+                                <input asp-for="LastName" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="Doe" />
+                                <span asp-validation-for="LastName" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Email" class="form-label text-secondary small fw-medium">Email Address</label>
+                                <input asp-for="Email" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="you@example.com" />
+                                <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="Phone1" class="form-label text-secondary small fw-medium">Primary Phone</label>
+                                <input asp-for="Phone1" type="tel" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="+1 (555) 000-0000" />
+                                <span asp-validation-for="Phone1" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="Phone2" class="form-label text-secondary small fw-medium">Phone 2 <span class="text-muted fw-light">(Optional)</span></label>
+                                <input asp-for="Phone2" type="tel" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="+1 (555) 000-0000" />
+                                <span asp-validation-for="Phone2" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Delivery Address -->
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4 p-md-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-semibold me-3" style="width: 28px; height: 28px; font-size: 0.85rem;">2</div>
+                            <h2 class="h6 mb-0 text-dark fw-bold">Delivery Address</h2>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="Street" class="form-label text-secondary small fw-medium">Street Address</label>
+                                <input asp-for="Street" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="123 Main St, Apt 4B" />
+                                <span asp-validation-for="Street" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="City" class="form-label text-secondary small fw-medium">City</label>
+                                <input asp-for="City" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="New York" />
+                                <span asp-validation-for="City" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="PostalCode" class="form-label text-secondary small fw-medium">Postal Code <span class="text-muted fw-light">(Optional)</span></label>
+                                <input asp-for="PostalCode" class="form-control form-control-lg fs-6 bg-light border-0 py-3 px-3" placeholder="10001" />
+                                <span asp-validation-for="PostalCode" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="DeliveryInstructions" class="form-label text-secondary small fw-medium">Delivery Instructions <span class="text-muted fw-light">(Optional)</span></label>
+                                <textarea asp-for="DeliveryInstructions" class="form-control form-control-lg fs-6 bg-light border-0 p-3" rows="3" placeholder="Gate codes, special instructions, etc."></textarea>
+                                <span asp-validation-for="DeliveryInstructions" class="text-danger small mt-1 d-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Order Summary Side Panel -->
+            <div class="col-lg-5">
+                <div class="card border border-light-subtle shadow-sm rounded-4 sticky-top" style="top: 2rem;">
+                    <div class="card-body p-4 p-md-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                            <h2 class="h6 mb-0 text-dark fw-bold">Order Summary</h2>
+                            <span class="badge bg-light text-secondary fw-medium px-2 py-1 border border-light-subtle rounded-pill">
+                                @Model.TotalItems @(Model.TotalItems > 1 ? "Items" : "Item")
+                            </span>
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="mb-4 pe-1" style="max-height: 260px; overflow-y: auto;">
+                            @foreach (var item in Model.Items)
+                            {
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center me-3">
+                                        <div class="position-relative me-3">
+                                            <img src="@item.BookImageUrl" alt="@item.BookTitle" 
+                                            class="rounded-3 object-fit-cover border" style="width: 52px; height: 52px;" />
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 text-dark fw-medium text-truncate" style="max-width: 150px; font-size: 0.9rem;">@item.BookTitle</h6>
+                                            <small class="text-muted">Qty: @item.Quantity</small>
+                                        </div>
+                                    </div>
+                                    <span class="text-dark fw-semibold small">$@item.SubTotal.ToString("F2")</span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Totals Breakdown -->
+                        <div class="bg-light p-3 rounded-4 mb-4">
+                            <div class="d-flex justify-content-between mb-2 text-secondary small">
+                                <span>Subtotal</span>
+                                <span class="text-dark fw-medium">$@Model.TotalPrice.ToString("F2")</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-0 text-secondary small">
+                                <span>Delivery Fee</span>
+                                <span class="text-dark fw-medium">$@Model.DeliveryFee.ToString("F2")</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                            <span class="text-dark fw-bold">Total</span>
+                            <span class="h4 text-dark mb-0 fw-bold">$@Model.GrandTotal.ToString("F2")</span>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="mb-4">
+                            <h6 class="text-dark fw-bold mb-3 fs-6">Payment Method</h6>
+
+                            <div class="row g-2">
+                                <!-- Online Payment -->
+                                <div class="col-12">
+                                    <label class="border border-light-subtle rounded-3 p-3 w-100 d-flex align-items-center bg-white shadow-xs transition-all" style="cursor: pointer;">
+                                        <input asp-for="PaymentMethod"
+                                               type="radio"
+                                               value="@PaymentMethod.Stripe"
+                                               class="form-check-input me-3 mt-0"
+                                               checked />
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold text-dark small">Pay Online</div>
+                                            <small class="text-muted" style="font-size: 0.75rem;">Secure payment via Stripe</small>
+                                        </div>
+                                        <i class="bi bi-credit-card ms-auto fs-5 text-secondary"></i>
+                                    </label>
+                                </div>
+
+                                <!-- Cash on Delivery -->
+                                <div class="col-12">
+                                    <label class="border border-light-subtle rounded-3 p-3 w-100 d-flex align-items-center bg-white shadow-xs transition-all" style="cursor: pointer;">
+                                        <input asp-for="PaymentMethod"
+                                               type="radio"
+                                               value="@PaymentMethod.CashOnDelivery"
+                                               class="form-check-input me-3 mt-0" />
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold text-dark small">Cash on Delivery</div>
+                                            <small class="text-muted" style="font-size: 0.75rem;">Pay upon order receipt</small>
+                                        </div>
+                                        <i class="bi bi-cash-stack ms-auto fs-5 text-secondary"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="PaymentMethod" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-dark w-100 py-3 fw-semibold rounded-pill shadow-sm mb-3">
+                            Place Order
+                        </button>
+
+                        <div class="text-center">
+                            <span class="text-muted small d-flex align-items-center justify-content-center" style="font-size: 0.8rem;">
+                                <i class="bi bi-shield-check text-success me-1 fs-6"></i>
+                                Secure 256-bit SSL Encryption
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

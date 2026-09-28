@@ -1,0 +1,216 @@
+﻿@model BookShop.Application.ViewModels.Book.BookAddVM
+
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card border border-light-subtle shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-light border-0 py-4 px-4 px-md-5">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="p-2 bg-primary bg-opacity-10 text-primary rounded-3">
+                            <i class="bi bi-journal-plus fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-1 fw-bold text-dark">Add New Book</h4>
+                            <p class="text-muted small mb-0">Fill in the details below to publish a new book to the catalog.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post"
+                          asp-area="Admin" asp-controller="Book" asp-action="Add"
+                          enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0 text-muted">
+                                    <i class="bi bi-book"></i>
+                                </span>
+                                <input asp-for="Title" class="form-control border-start-0 ps-1 py-2"
+                                       placeholder="e.g. The Great Gatsby" />
+                            </div>
+                            <span asp-validation-for="Title" class="d-block mt-1 text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="CategoryId" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 text-muted">
+                                        <i class="bi bi-tag"></i>
+                                    </span>
+                                    <select asp-for="CategoryId" asp-items="ViewBag.Categories"
+                                            class="form-select border ps-1 py-2">
+                                        <option value="">--- Select Category ---</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="CategoryId" class="d-block mt-1 text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="AuthorId" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 text-muted">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <select asp-for="AuthorId" asp-items="ViewBag.Authors"
+                                            class="form-select border ps-1 py-2">
+                                        <option value="">--- Select Author ---</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="AuthorId" class="d-block mt-1 text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="Price" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="Price" class="form-control ps-1 py-2"
+                                       placeholder="0.00" />
+                                <span asp-validation-for="Price" class="mt-1 d-block text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="SpecialPrice" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="SpecialPrice" type="number" class="form-control ps-1 py-2"
+                                       placeholder="0.00" />
+                                <span asp-validation-for="SpecialPrice" class="mt-1 d-block text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row g-4">
+                            <div class="col-md-4">
+                                <label asp-for="Stock" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="Stock" class="form-control ps-1 py-2" placeholder="0" />
+                                <span asp-validation-for="Stock" class="mt-1 d-block text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="PageNumber" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="PageNumber" class="form-control ps-1 py-2" placeholder="0" />
+                                <span asp-validation-for="PageNumber" class="mt-1 d-block text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="ISBN" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="ISBN" class="form-control ps-1 py-2" placeholder="e.g. 978-3-16..." />
+                                <span asp-validation-for="ISBN" class="mt-1 d-block text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="PublishedDate" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                                <input asp-for="PublishedDate" type="date" class="form-control ps-1 py-2" />
+                                <span asp-validation-for="PublishedDate" class="mt-1 d-block text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 d-flex align-items-center pt-4">
+                                <div class="d-flex gap-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" asp-for="IsNewArrival">
+                                        <label asp-for="IsNewArrival"
+                                            class="form-check-label fw-semibold text-secondary small text-uppercase">
+                                            New Arrival
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" asp-for="IsFeatured">
+                                        <label asp-for="IsFeatured"
+                                               class="form-check-label fw-semibold text-secondary small text-uppercase">Featured</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                            <textarea asp-for="Description" class="form-control p-3" rows="4"
+                                      placeholder="Provide a brief plot summary or description..."></textarea>
+                            <span asp-validation-for="Description" class="mt-1 d-block text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-secondary small text-uppercase"></label>
+                            <input type="file" asp-for="File" id="imageUpload" class="d-none" />
+
+                            <div id="uploadBox" class="border border-2 border-secondary-subtle rounded-4 p-4
+                                text-center bg-light bg-opacity-50 text-secondary" style="cursor:pointer;">
+                                <div class="py-3" id="uploadPrompt">
+                                    <i class="bi bi-cloud-arrow-up display-5 text-primary mb-2 d-block"></i>
+                                    <p class="fw-medium mb-1 text-dark">Click to upload book cover</p>
+                                </div>
+                                <div class="d-none" id="previewContainer">
+                                    <img src="" class="img-fluid shadow-sm rounded-2 border"
+                                         style="max-height: 300px; object-fit: cover;" />
+                                    <p class="small text-primary mt-2 mb-0 fw-medium">
+                                        <i class="bi bi-arrow-repeat me-1"></i> Change Cover Image
+                                    </p>
+                                </div>
+                            </div>
+                            <span asp-validation-for="File" class="d-block mt-1 text-danger" id="upload-error"></span>
+                        </div>
+
+                        <hr class="my-3 opacity-25" />
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                            <a asp-area="Admin" asp-controller="Book" asp-action="Index"
+                               class="btn btn-outline-secondary px-4 py-1 rounded-3 order-2 order-sm-1 shadow-sm">
+                                <i class="bi bi-arrow-left me-2"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-1 rounded-3 order-1 order-sm-2 shadow-sm">
+                                <i class="bi bi-check-lg me-2"></i> Save Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            $('#uploadBox').click(function() {
+                $('#imageUpload').click();
+            })
+
+            $('#imageUpload').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewContainer img').attr('src', e.target.result);
+                        $('#uploadPrompt').addClass('d-none');
+                        $('#previewContainer').removeClass('d-none');
+                        $('#upload-error').hide().text("");
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('form').on("submit", function() {
+                var form = $(this);
+                var fileInput = $('#imageUpload')[0];
+
+                if (!form.valid()) {
+                    return false;
+                }
+
+                if (fileInput.files.length === 0) {
+                    $('#upload-error')
+                        .show()
+                        .text("Please select a book cover image")
+                        .addClass('text-danger');
+                    return false;
+                }
+            })
+        })
+    </script>
+}

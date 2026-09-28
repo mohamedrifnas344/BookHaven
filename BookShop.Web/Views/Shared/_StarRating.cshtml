@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BookShop.Application.ViewModels.Rating.RatingAverageCountVM>
+
+@{
+    var validRatings = Model?.Where(r => r.Value > 0).ToList() ??
+    new List<BookShop.Application.ViewModels.Rating.RatingAverageCountVM>();
+
+    double avgRating = validRatings.Any() ? validRatings.Average(r => r.Value) : 0;
+    int totalCount = validRatings.Count;
+}
+
+<div class="d-flex align-items-center gap-2">
+    <div class="text-warning small d-flex align-items-center gap-1">
+        @for (int i = 1; i <= 5; i++)
+        {
+            if (i <= Math.Floor(avgRating))
+            {
+                <i class="bi bi-star-fill"></i>
+            }
+            else if (i - avgRating <= 0.5 && i > avgRating)
+            {
+                <i class="bi bi-star-half"></i>
+            }
+            else
+            {
+                <i class="bi bi-star"></i>
+            }
+        }
+    </div>
+    <span class="text-muted small fw-medium">
+        @avgRating.ToString("0.0") (@totalCount)
+    </span>
+</div>

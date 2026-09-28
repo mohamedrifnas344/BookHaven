@@ -1,0 +1,165 @@
+﻿@model BookShop.Application.ViewModels.Common.BookPageResponseVM
+
+@{
+    ViewData["Title"] = "Explore Books";
+}
+
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 fw-semibold text-uppercase mb-2">
+            Our Collection
+        </span>
+        <h1 class="fw-bold text-dark display-5 mb-2">Explore Our Books</h1>
+        <p class="text-muted col-lg-6 mx-auto">
+            Discover books from your favorite authors across a wide range of categories.
+        </p>
+    </div>
+
+    <!-- Filter Section -->
+    <form method="get"
+          asp-area="Customer"
+          asp-controller="Book"
+          asp-action="Index"
+          id="filterForm"
+          class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+
+                <!-- Category Filter -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label for="categoryFilter" class="form-label fw-semibold text-secondary mb-1">
+                        Category
+                    </label>
+                    <select id="categoryFilter"
+                            name="category"
+                            class="form-select border-light-subtle py-2 shadow-none text-dark filter-input">
+                        <option value="">All Categories</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Name" selected="@(ViewBag.Category == category.Name)">
+                                @category.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Author Filter -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label for="authorFilter" class="form-label fw-semibold text-secondary mb-1">
+                        Author
+                    </label>
+                    <select id="authorFilter"
+                            name="author"
+                            class="form-select border-light-subtle py-2 shadow-none text-dark filter-input">
+                        <option value="">All Authors</option>
+                        @foreach (var author in Model.Authors)
+                        {
+                            <option value="@author.Name" selected="@(ViewBag.Author == author.Name)">
+                                @author.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Search Input -->
+                <div class="col-12 col-md-4 col-lg-4">
+                    <label for="searchInput" class="form-label fw-semibold text-secondary mb-1">
+                        Search Books
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-light-subtle text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text"
+                               id="searchInput"
+                               name="search"
+                               value="@ViewBag.Search"
+                               class="form-control bg-light border-light-subtle py-2 shadow-none filter-input"
+                               placeholder="Search by book title..." />
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <div class="col-12 col-lg-2 d-grid">
+                    <a asp-area="Customer"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary py-2 shadow-sm">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        Reset
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!-- Book Grid -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @await Html.PartialAsync("_BookCard", Model.Books)
+    </div>
+
+    <!-- Dynamic Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="d-flex justify-content-center pt-4">
+            <ul class="pagination">
+                <!-- Previous Button -->
+                <li class="p-1 page-item @(!ViewBag.HasPreviousPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-area="Customer"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(ViewBag.PageNumber - 1)"
+                       asp-route-search="@ViewBag.Search"
+                       asp-route-category="@ViewBag.Category"
+                       asp-route-author="@ViewBag.Author">
+                        Previous
+                    </a>
+                </li>
+
+                <!-- Page Number Links -->
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="p-1 page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                           asp-area="Customer"
+                           asp-controller="Book"
+                           asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-search="@ViewBag.Search"
+                           asp-route-category="@ViewBag.Category"
+                           asp-route-author="@ViewBag.Author">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <!-- Next Button -->
+                <li class="p-1 page-item @(!ViewBag.HasNextPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-area="Customer"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(ViewBag.PageNumber + 1)"
+                       asp-route-search="@ViewBag.Search"
+                       asp-route-category="@ViewBag.Category"
+                       asp-route-author="@ViewBag.Author">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.filter-input').on('change', function() {
+                $('#filterForm').submit();
+            })
+        })
+    </script>
+}

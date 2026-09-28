@@ -1,0 +1,65 @@
+﻿@model BookShop.Application.ViewModels.Author.AuthorResponseVM
+
+@{
+    ViewData["Title"] = "Author Details";
+}
+
+<div class="container py-5">
+    @* Breadcrumb / Back Navigation *@
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">Home</a>
+            </li>
+            <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">Author Details</li>
+        </ol>
+    </nav>
+
+    @* Author Profile Hero Section *@
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+        <div class="card-body p-4 p-lg-5 bg-light">
+            <div class="row align-items-center g-4">
+                @* Author Avatar *@
+                <div class="col-12 col-md-auto text-center">
+                    <div class="position-relative mx-auto rounded-circle overflow-hidden shadow-sm bg-white border border-3 border-white" style="width: 160px; height: 160px;">
+                        <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/Images/default-user.jpg" : Model.ImageUrl)"
+                             alt="@Model.Name"
+                             class="w-100 h-100 object-fit-cover" />
+                    </div>
+                </div>
+
+                @* Author Info *@
+                <div class="col-12 col-md text-center text-md-start">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">Featured Author</span>
+                    <h1 class="display-5 fw-bold text-dark mb-2">@Model.Name</h1>
+                    <p class="text-muted mb-0">Discover published works, biographies, and literary collections by @Model.Name.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Biography Section *@
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <h3 class="fw-bold text-dark mb-4 border-bottom pb-3">
+                    <i class="bi bi-person-lines-fill text-warning me-2"></i>About the Author
+                </h3>
+
+                @if (!string.IsNullOrEmpty(Model.Biography))
+                {
+                    <div class="text-secondary lh-lg fs-6">
+                        @Model.Biography
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-journal-x display-4 text-muted opacity-50 mb-3 d-block"></i>
+                        <p class="text-muted mb-0">No detailed biography available for this author yet.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

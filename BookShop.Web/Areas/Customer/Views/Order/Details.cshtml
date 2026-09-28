@@ -1,0 +1,18 @@
+﻿@model BookShop.Application.ViewModels.Order.OrderResponseVM
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+
+<div class="container my-5">
+    <div class="mb-4 text-end">
+        <a asp-area="Customer" asp-controller="Order" asp-action="MyOrders"
+           class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+    <div>
+        @await Html.PartialAsync("_OrderDetails", Model)
+    </div>
+</div>

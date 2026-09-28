@@ -1,0 +1,159 @@
+﻿@model BookShop.Application.ViewModels.ShoppingCart.ShoppingCartResponseVM
+
+@{
+    ViewData["Title"] = "Your Shopping Cart";
+}
+
+<div class="container my-5">
+    @if(Model.Items != null && Model.Items.Any())
+    {
+        <div class="row align-items-center mb-4 border-bottom g-3">
+            <div class="col-sm">
+                <h1 class="h2 fw-bold m-0 text-dark text-nowrap">Your Shopping Cart</h1>
+            </div>
+            <div class="col-sm text-sm-end">
+                <a asp-area="Customer" asp-controller="Book" asp-action="Index"
+                    class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="bg-white border rounded-3 p-md-4 shadow-sm">
+                    <div class="d-flex justify-content-between text-muted small text-uppercase fw-bold border-bottom pb-2 mb-1">
+                        <span>Book Details</span>
+                        <span class="d-none d-md-inline-block pe-4">Total Breakdown</span>
+                    </div>
+                    @foreach(var item in Model.Items)
+                    {
+                        <div class="row align-items-center py-4 @(item == Model.Items.First() ? "pt-2" : "border-top")">
+                            <div class="col-3 col-sm-2">
+                                <div class="ratio ratio-1x1 bg-light rounded border p-1 d-flex align-items-center 
+                                justify-content-center overflow-hidden">
+                                    <img src="@item.BookImageUrl" alt="@item.BookTitle" 
+                                    class="img-fluid m-auto shadow-sm" style="width: 100%; height : 100%;"/>
+                                </div>
+                            </div>
+                            <div class="col-9 col-sm-10">
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-md-7">
+                                        <h5 class="h6 fw-bold text-dark text-truncate mb-1">@item.BookTitle</h5>
+                                        <p class="text-secondary small mb-0">
+                                            Price : <span class="fw-semibold text-dark">
+                                                        $@item.Price.ToString("F2")
+                                                    </span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="d-flex align-items-center justify-content-between justify-content-md-end gap-3">
+                                            <div style="width: 105px;">
+                                                <div class="d-flex align-items-center border rounded-pill bg-light overflow-hidden">
+                                                    <form asp-area="Customer"
+                                                          asp-controller="ShoppingCart"
+                                                          asp-action="DecrementQuantity"
+                                                          method="post">
+                                                        <input type="hidden" name="bookId" value="@item.BookId" />
+                                                        <button type="submit" class="btn btn-light btn-sm border-0 px-2 text-dark shadow-sm" style="border-radius: 0;">
+                                                            -
+                                                        </button>
+                                                    </form>
+
+                                                    <input type="text" class="form-control form-control-sm text-center bg-white border-0 fw-bold text-dark shadow-none"
+                                                           style="pointer-events: none; font-size: 0.85rem; z-index : 1;"
+                                                           readonly value="@item.Quantity" />
+
+                                                    <form asp-area="Customer" 
+                                                          asp-controller="ShoppingCart" 
+                                                          asp-action="IncrementQuantity"
+                                                          method="post">
+                                                        <input type="hidden" name="bookId" value="@item.BookId" />
+                                                        <button type="submit" class="btn btn-light btn-sm border-0 px-2 text-dark shadow-sm" style="border-radius: 0;">
+                                                            +
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="text-end" style="min-width: 95px;">
+                                                <span class="fw-bold text-dark mb-1 d-block">
+                                                    $@item.SubTotal.ToString("F2")
+                                                </span>
+                                                <form asp-area="Customer"
+                                                      asp-controller="ShoppingCart"
+                                                      asp-action="Remove"
+                                                      method="post">
+                                                    <input type="hidden" name="bookId" value="@item.BookId" />
+                                                    <button type="submit" class="btn btn-sm btn-link link-danger p-0 text-decoration-none small" style="border-radius : 0;">
+                                                        <i class="bi bi-trash3 me-1"></i> Remove
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border rounded-3 shadow-sm bg-light p-4 sticky-top" style="top: 2rem; z-index : 4;">
+                    <h2 class="h5 fw-bold text-dark border-bottom pb-2 mb-3">Order Summary</h2>
+                    <div class="bg-white border rounded-3 mb-3 p-3">
+                        <p class="text-muted small fw-bold text-uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                            Item Review
+                        </p>
+                        @foreach(var item in Model.Items)
+                        {
+                            <div class="d-flex justify-content-between align-items-start gap-2 pb-2 mb-2 border-bottom"
+                            style="font-size: 0.85rem;">
+                                <div class="text-truncate text-secondary" style="max-width: 70%;">
+                                    <span class="fw-bold text-dark">@item.BookTitle</span> x @item.Quantity
+                                </div>
+                                <span class="text-dark fw-semibold text-nowrap">
+                                    $@item.SubTotal.ToString("F2")
+                                </span>
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 bg-white border rounded-3 p-3">
+                        <span class="text-secondary small">Shipping Fee</span>
+                        <span class="text-dark fw-semibold small me-2">$4.00</span>
+                    </div>
+                    <hr class="my-3 opacity-25"/>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold text-dark small text-uppercase">Total</span>
+                        <span class="h4 fw-bold text-dark m-0">$@((Model.Total + 4).ToString("F2"))</span>
+                    </div>
+                    <a asp-area="Customer" asp-controller="Order" asp-action="Checkout"
+                        class="btn btn-primary btn-lg w-100 py-3 rounded-3 fw-bold text-uppercase fs-6 shadow-sm mb-3">
+                        Proceed to Checkout
+                    </a>
+                    <div class="d-flex align-items-center justify-content-center text-secondary gap-2 small pt-1">
+                        <i class="bi bi-shield-check text-success fs-5"></i>
+                        <span style="font-size: 0.8rem;">Secure SSL Encrypted Checkout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center py-5">
+            <div class="col-md-6">
+                <div class="bg-white border rounded-3 shadow-sm p-5 text-center">
+                    <div class="mb-3 text-muted">
+                        <i class="bi bi-cart-x display-1"></i>
+                    </div>
+                    <h2 class="h4 fw-bold text-dark mb-2">Your Shopping Cart is Empty.</h2>
+                    <p class="text-secondary small mb-4">You haven't added any books to your cart yet.</p>
+                    <a asp-area="Customer" asp-controller="Book" asp-action="Index"
+                       class="btn btn-primary px-4 py-2 rounded-pill fw-semibold btn-sm shadow-sm">
+                       Browse Books
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

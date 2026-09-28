@@ -1,0 +1,119 @@
+﻿@using BookShop.Domain.Enums
+@model List<BookShop.Application.ViewModels.Order.OrderResponseVM>
+
+@{
+    ViewData["Title"] = "My Orders";
+    var currentStatus = Context.Request.Query["status"].ToString();
+}
+<div class="container my-5 min-vh-100">
+    <div class="row align-items-center mb-4 pb-3 border-bottom">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-dark mb-1">Order History</h2>
+            <p class="text-secondary small mb-0">Review, track and manage your past book orders.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <span class="badge bg-light text-dark px-3 py-2 fs-6 fw-semibold border">
+                Total Records : <strong class="text-primary">@Model.Count</strong>
+            </span>
+        </div>
+    </div>
+
+    <!-- Order Status Filter Pills -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-action="MyOrders"
+               class="btn btn-sm px-3 rounded-pill @(string.IsNullOrEmpty(currentStatus) ? "btn-dark" : "btn-outline-dark")">
+                All Orders
+            </a>
+            @foreach (OrderStatus statusVal in Enum.GetValues(typeof(OrderStatus)))
+            {
+                var isSelected = currentStatus == statusVal.ToString();
+                <a asp-action="MyOrders" asp-route-status="@statusVal"
+                   class="btn btn-sm px-3 rounded-pill @(isSelected ? "btn-dark" : "btn-outline-dark")">
+                    @statusVal
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="p-5 text-center bg-light border rounded-3">
+            <i class="bi bi-book text-muted fs-1 mb-3 d-block"></i>
+            <h4 class="fw-semibold text-secondary">No Orders Found</h4>
+            <p class="text-muted small mb-0">There are currently no transactions recorded under this account for the selected filter.</p>
+        </div>
+    }
+    else
+    {
+        <div class="border rounded-3 shadow-sm bg-white overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-secondary border-bottom">
+                        <tr>
+                            <th class="ps-4 py-3 fw-semibold text-uppercase small">Order Id</th>
+                            <th class="py-3 fw-semibold text-uppercase small">Date Placed</th>
+                            <th class="py-3 fw-semibold text-uppercase small">Customer</th>
+                            <th class="py-3 fw-semibold text-uppercase small text-center">Items</th>
+                            <th class="py-3 fw-semibold text-uppercase small">Order Status</th>
+                            <th class="py-3 fw-semibold text-uppercase small">Payment Status</th>
+                            <th class="py-3 fw-semibold text-uppercase small">Payment Method</th> <!-- Added Header -->
+                            <th class="py-3 fw-semibold text-uppercase small">Total</th>
+                            <th class="pe-3 py-3 fw-semibold text-uppercase small">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3 text-dark fw-bold">#@order.Id</td>
+                                <td class="py-3">
+                                    <span class="d-block text-dark fw-medium">@order.OrderDate.ToString("d")</span>
+                                    <span class="d-block text-muted small">@order.OrderDate.ToString("t")</span>
+                                </td>
+                                <td class="py-3 text-secondary">@order.FirstName @order.LastName</td>
+                                <td class="py-3 text-center text-dark fw-semibold">@order.TotalItems</td>
+                                <td class="py-3">
+                                    <span class="badge rounded-1 px-3 py-2 font-monospace text-uppercase text-success
+                                        bg-success bg-opacity-10 border border-success border-opacity-10"
+                                          style="font-size: 0.75rem;">
+                                        @order.OrderStatus
+                                    </span>
+                                </td>
+                                <td class="py-3">
+                                    <span class="badge rounded-1 px-3 py-2 font-monospace text-uppercase text-success
+                                        bg-success bg-opacity-10 border border-success border-opacity-10"
+                                          style="font-size: 0.75rem;">
+                                        @order.PaymentStatus
+                                    </span>
+                                    @if (order.PaymentDate != null)
+                                    {
+                                        <small class="text-muted d-block text-nowrap" style="font-size: 0.70rem;">
+                                            Paid: @order.PaymentDate?.ToString("g")
+                                        </small>
+                                    }
+                                </td>
+                                <td class="py-3 text-secondary">
+                                    <span class="fw-medium text-dark">
+                                        @(order.PaymentMethod == PaymentMethod.Stripe
+                                        ? "Online Payment" : order.PaymentMethod.ToString())
+                                    </span>
+                                </td> 
+                                <td class="py-3 text-start fw-bold text-dark">
+                                    $@order.GrandTotal.ToString("F2")
+                                </td>
+                                <td class="pe-3 py-3">
+                                    <a asp-area="Customer" asp-controller="Order"
+                                       asp-action="Details" asp-route-orderId="@order.Id"
+                                       class="btn btn-sm btn-outline-dark px-2 py-1 text-nowrap">
+                                        <i class="bi bi-eye me-1"></i> View 
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

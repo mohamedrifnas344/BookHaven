@@ -1,0 +1,249 @@
+﻿@model BookShop.Application.ViewModels.Order.OrderCreationResult
+@using BookShop.Domain.Enums
+
+@{
+    ViewData["Title"] = "Order Confirmed";
+
+    var isCod = Model.PaymentMethod == PaymentMethod.CashOnDelivery;
+
+    var orderStatus = isCod ? "Pending" : "Confirmed";
+    var orderStatusClass = isCod
+        ? "bg-warning-subtle text-warning-emphasis"
+        : "bg-success-subtle text-success";
+
+    var paymentStatus = isCod ? "Payment Pending" : "Paid";
+    var paymentStatusClass = isCod
+        ? "bg-warning-subtle text-warning-emphasis"
+        : "bg-success-subtle text-success";
+
+    var paymentIcon = isCod ? "bi-cash-coin" : "bi-credit-card";
+    var paymentMethodText = isCod ? "Cash on Delivery" : "Online Payment";
+}
+
+<div class="bg-light min-vh-100 py-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-9 col-lg-7">
+
+                <!-- Success Header -->
+                <div class="text-center mb-4">
+
+                    <div class="d-inline-flex align-items-center justify-content-center
+                        rounded-circle bg-success bg-opacity-10 mb-4"
+                         style="width: 90px; height: 90px;">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="52"
+                             height="52"
+                             fill="none"
+                             viewBox="0 0 24 24">
+
+                            <circle cx="12"
+                                    cy="12"
+                                    r="9"
+                                    fill="#198754" />
+
+                            <path d="M7.5 12.5L10.5 15.5L16.5 9.5"
+                                  stroke="white"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+
+                        </svg>
+
+                    </div>
+
+                    <h1 class="fw-bold text-dark mb-2">
+                        Order Confirmed!
+                    </h1>
+
+                    <p class="text-muted fs-5 mb-0">
+                        Thank you for your purchase. Your order has been
+                        successfully placed and is now being processed.
+                    </p>
+
+                </div>
+
+
+                <!-- Order Details -->
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <!-- Header -->
+                        <div class="d-flex align-items-center mb-4">
+
+                            <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
+                                <i class="bi bi-book-half text-primary fs-4"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    Order Details
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Your order has been received
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="border-top pt-4">
+
+                            <div class="row g-4">
+
+                                <!-- Order ID -->
+                                <div class="col-sm-6">
+
+                                    <span class="text-muted small d-block mb-1">
+                                        Order ID
+                                    </span>
+
+                                    <span class="fw-semibold text-dark">
+                                        #@Model.OrderId
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Order Total -->
+                                <div class="col-sm-6">
+
+                                    <span class="text-muted small d-block mb-1">
+                                        Order Total
+                                    </span>
+
+                                    <span class="fw-bold text-success fs-5">
+                                        $@Model.GrandTotal.ToString("F2")
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Payment Method -->
+                                <div class="col-sm-6">
+
+                                    <span class="text-muted small d-block mb-1">
+                                        Payment Method
+                                    </span>
+
+                                    <span class="fw-semibold text-dark">
+                                        <i class="bi @paymentIcon me-1"></i>
+                                        @paymentMethodText
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Order Status -->
+                                <div class="col-sm-6">
+
+                                    <span class="text-muted small d-block mb-1">
+                                        Order Status
+                                    </span>
+
+                                    <span class="badge @orderStatusClass">
+                                        @orderStatus
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Payment Status -->
+                                <div class="col-sm-6">
+
+                                    <span class="text-muted small d-block mb-1">
+                                        Payment Status
+                                    </span>
+
+                                    <span class="badge @paymentStatusClass">
+                                        @paymentStatus
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- What's Next -->
+                <div class="card border-0 shadow-sm bg-white mb-4">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div class="me-3">
+                                <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+                            </div>
+
+                            <div>
+
+                                <h6 class="fw-bold mb-1">
+                                    What's next?
+                                </h6>
+
+                                @if (isCod)
+                                {
+                                    <p class="text-muted small mb-0">
+                                        We'll process your order and prepare your
+                                        books for delivery. Payment will be collected
+                                        when your order is delivered.
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="text-muted small mb-0">
+                                        Your payment has been successfully processed.
+                                        We'll now prepare your books for delivery.
+                                        You can track your order from your orders page.
+                                    </p>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="d-flex flex-column flex-sm-row gap-3">
+
+                    <a asp-area="Customer"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       class="btn btn-light border btn-lg fw-semibold flex-fill">
+
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Continue Shopping
+
+                    </a>
+
+                    <a asp-area="Customer"
+                       asp-controller="Order"
+                       asp-action="MyOrders"
+                       class="btn btn-primary btn-lg fw-semibold flex-fill">
+
+                        <i class="bi bi-box-seam me-2"></i>
+                        View My Orders
+
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

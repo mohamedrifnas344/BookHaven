@@ -1,0 +1,395 @@
+﻿@using BookShop.Domain.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> _signInManager
+
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookHaven</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel=" stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" />
+</head>
+<body class="bg-light d-flex flex-column vh-100">
+
+    <header class="custom-layout-container border-bottom border-light pt-1 px-1">
+        <nav class="navbar navbar-expand-lg p-0">
+            <div class="d-flex align-items-center justify-content-between w-100 flex-nowrap">
+                <div class="d-flex flex-grow-1 flex-lg-grow-0" style="flex-basis: 0;">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+                        class="navbar-brand fs-3 fw-bold text-dark m-0 d-flex align-items-center gap-1 ps-3 text-nowrap">
+                        <h3 class="fw-bold">
+                            <i class="bi bi-book-half text-warning me-1"></i>
+                            <span class="text-danger fw-bold">BookHaven</span>
+                        </h3>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse justify-content-center">
+                    <ul class="navbar-nav gap-lg-4 fw-semibold">
+                        <li class="nav-item">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+                               class="nav-link px-1 pb-1
+                            @(currentController == "Home" && currentAction == "Index" ?
+                            "active border-bottom border-2 border-info text-dark" : "text-secondary")">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Customer" asp-controller="Book" asp-action="Index"
+                               class="nav-link px-1 pb-1
+                            @(currentController == "Book" && currentAction == "Index" ?
+                               "active border-bottom border-2 border-info text-dark" : "text-secondary")">Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-area="Customer" asp-controller="Contact" asp-action="Index"
+                               class="nav-link px-1 pb-1
+                            @(currentController == "Contact" && currentAction == "Index" ?
+                             "active border-bottom border-2 border-info text-dark" : "text-secondary")">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-end gap-1 gap-sm-2 flex-grow-1 flex-lg-grow-0"
+                style="flex-basis: 0;">
+                    @if (_signInManager.IsSignedIn(User))
+                    {
+                        if (User.IsInRole("ADMIN"))
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                               class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-4">
+                                Admin
+                            </a>
+                        }
+                        else
+                        {        
+                            <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index"
+                               class="btn btn-link text-secondary text-decoration-none position-relative mx-1 d-flex
+                                align-items-center justify-content-center"
+                               style="width: 40px; height: 40px;">
+                                <i class="bi bi-cart3 fs-5"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill
+                                    bg-danger d-flex align-items-center justify-content-center cart-badge"
+                                      style="margin-top: 10px; margin-left: -5px; min-width: 20px; height: 20px;
+                                    font-size: 0.7rem; padding: 0 4px;">
+                                    @await Component.InvokeAsync("CartCount")
+                                </span>
+                            </a>
+
+                            <div class="dropdown">
+                                <button type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                        style="width: 40px; height: 40px;"
+                                        class="btn btn-link text-secondary text-decoration-none rounded-circle p-0 d-flex
+                                    align-items-center justify-content-center">
+                                    <i class="bi bi-person fs-4"></i>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-2 rounded-3">
+                                    <li>
+                                        <a asp-area="Customer" asp-controller="Order" asp-action="MyOrders"
+                                           class="dropdown-item py-2 px-3 fw-medium align-items-center gap-2">
+                                            <i class="bi bi-receipt text-secondary"></i> My Orders
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="Customer" asp-controller="User" asp-action="Profile"
+                                           class="dropdown-item py-2 px-3 fw-medium align-items-center gap-2">
+                                            <i class="bi bi-person text-secondary"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form asp-area="Identity" asp-controller="Account" asp-action="Logout"
+                                              method="post">
+                                            <button type="submit" class="dropdown-item py-2 px-3 fw-medium text-danger
+                                                d-flex align-items-center gap-2 w-100 border-0 bg-transparent">
+                                                <i class="bi bi-box-arrow-right"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index"
+                           class="btn btn-link text-secondary text-decoration-none position-relative mx-1 d-flex
+                            align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;">
+                            <i class="bi bi-cart3 fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill
+                                bg-danger d-flex align-items-center justify-content-center cart-badge"
+                                  style="margin-top: 10px; margin-left: -5px; min-width: 20px; height: 20px;
+                                font-size: 0.7rem; padding: 0 4px;">
+                                @await Component.InvokeAsync("CartCount")
+                            </span>
+                        </a>
+
+                        <a asp-area="Identity" asp-controller="Account" asp-action="Login"
+                           class="btn btn-outline-dark btn-sm rounded-pill px-3 py-1 fw-semibold text-nowrap d-flex
+                            align-items-center justify-content-center shadow-sm h-75">
+                            Login
+                        </a>
+                        <a asp-area="Identity" asp-controller="Account" asp-action="Register"
+                           class="btn btn-outline-dark btn-sm rounded-pill mx-1 px-3 py-1 fw-semibold text-nowrap d-flex
+                            align-items-center justify-content-center shadow-sm h-75">
+                            Sign Up
+                        </a>
+                    }
+
+                    <button type="button" class="navbar-toggler border-0 p-0 shadow-none ms-2 order-last text-secondary"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#mobileSidebar"
+                            aria-controls="mobileSidebar">
+                        <i class="bi bi-list fs-1"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="offcanvas offcanvas-start bg-white text-dark" tabindex="-1" id="mobileSidebar"
+         aria-labelledby="mobileSidebarLabel">
+
+        <div class="offcanvas-header border-bottom border-light py-3 px-4">
+            <h5 class="offcanvas-title fw-bold text-info fs-4" id="mobileSidebarLabel">BookHaven</h5>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body p-0">
+            <div class="list-group list-group-flush fw-semibold">
+                <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+                   class="list-group-item list-group-item-action py-3 px-4 d-flex align-items-center gap-3
+                    @(currentController == "Home" && currentAction == "Index" ?
+                     "bg-light text-dark" : "")">
+                    Home
+                </a>
+                <a asp-area="Customer" asp-controller="Menu" asp-action="Index"
+                   class="list-group-item list-group-item-action py-3 px-4 d-flex align-items-center gap-3
+                    @(currentController == "Book" && currentAction == "Index" ?
+                    "bg-light text-dark" : "")">
+                    Books
+                </a>
+                <a class="list-group-item list-group-item-action py-3 px-4 d-flex align-items-center gap-3
+                    @(currentController == "Contact" && currentAction == "Index" ?
+                        "bg-light text-dark" : "")">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-layout-container my-3 flex-grow-1">
+        <main role="main" class="pb-0 custom-layout-container">
+            <partial name="_Notification" />
+            @RenderBody()
+        </main>
+    </div>
+
+    @* Book Shop Footer *@
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+
+        <div class="container">
+
+            <div class="row g-5">
+
+                <!-- Brand -->
+                <div class="col-12 col-lg-4">
+
+                    <h3 class="fw-bold mb-3">
+                        <i class="bi bi-book-half text-warning me-2"></i>
+                        <span class="text-danger fw-bold">BookHaven</span>
+                    </h3>
+
+                    <p class="text-white-50 lh-lg mb-4"
+                       style="max-width: 360px;">
+                        A place for curious minds and passionate readers.
+                        Discover timeless classics, inspiring stories, and
+                        your next favorite book.
+                    </p>
+
+                    <div class="d-flex gap-2">
+                        <a href="#"
+                           class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+
+                        <a href="#"
+                           class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+
+                        <a href="#"
+                           class="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <!-- Explore -->
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <h6 class="fw-bold text-uppercase small mb-4 text-warning">
+                        Explore
+                    </h6>
+
+                    <ul class="list-unstyled d-flex flex-column gap-3 small">
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Books
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Authors
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Categories
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <!-- Popular Genres -->
+                <div class="col-6 col-md-4 col-lg-2">
+
+                    <h6 class="fw-bold text-uppercase small mb-4 text-warning">
+                        Genres
+                    </h6>
+
+                    <ul class="list-unstyled d-flex flex-column gap-3 small">
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Fiction
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                History
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Business
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                               class="text-white-50 text-decoration-none link-light">
+                                Self Development
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="col-12 col-md-4 col-lg-4">
+
+                    <h6 class="fw-bold text-uppercase small mb-4 text-warning">
+                        Get In Touch
+                    </h6>
+
+                    <ul class="list-unstyled d-flex flex-column gap-3 small text-white-50">
+
+                        <li class="d-flex align-items-start gap-3">
+                            <i class="bi bi-geo-alt text-warning fs-5"></i>
+                            <span>
+                                16 Tverskaya Street,<br />
+                                Moscow 125009, Russia
+                            </span>
+                        </li>
+
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="bi bi-envelope text-warning fs-5"></i>
+                            <span>
+                                support@bookhaven.com
+                            </span>
+                        </li>
+
+                        <li class="d-flex align-items-center gap-3">
+                            <i class="bi bi-telephone text-warning fs-5"></i>
+                            <span>
+                                +7 (495) 123-45-67
+                            </span>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-secondary my-5">
+
+            <!-- Bottom -->
+            <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-center
+                gap-3">
+
+                <p class="text-white-50 small mb-0">
+                    © @DateTime.Now.Year BookHaven. All rights reserved.
+                </p>
+
+                <div class="d-flex gap-4 small">
+
+                    <a href="#"
+                       class="text-white-50 text-decoration-none link-light">
+                        Privacy Policy
+                    </a>
+
+                    <a href="#"
+                       class="text-white-50 text-decoration-none link-light">
+                        Terms & Conditions
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

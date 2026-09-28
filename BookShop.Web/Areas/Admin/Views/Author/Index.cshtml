@@ -1,0 +1,145 @@
+﻿@model List<BookShop.Application.ViewModels.Author.AuthorResponseVM>
+
+<div class="row justify-content-center py-4">
+    <div class="col-xl-10 col-lg-11">
+        <!-- Page Title & Header context -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <h1 class="h3 fw-bold text-dark mb-1">Author Management</h1>
+                <p class="text-muted small mb-0">Manage catalog authors, bios, and portrait profiles.</p>
+            </div>
+            <div>
+                <a asp-area="Admin" asp-controller="Author" asp-action="Add" 
+                class="btn btn-primary px-4 rounded-pill shadow-sm d-inline-flex align-items-center">
+                    <i class="bi bi-plus-lg me-2"></i> Add Author
+                </a>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+
+            <!-- Body -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    @if (Model != null && Model.Any())
+                    {
+                        <table class="table table-hover align-middle mb-0">
+                            <!-- Header -->
+                            <thead class="table-light text-uppercase fs-7 text-secondary">
+                                <tr>
+                                    <th class="py-3 ps-3" style="width: 100px;">Image</th>
+                                    <th class="py-3">Author Name</th>
+                                    <th class="py-3">Biography</th>
+                                    <th class="py-3 text-center" style="width: 160px;">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <!-- Body -->
+                            <tbody>
+                                @foreach (var author in Model)
+                                {
+                                    <tr>
+                                        <!-- Image / Avatar -->
+                                        <td class="ps-3 py-3">
+                                            <img src="@author.ImageUrl" alt="@author.Name"
+                                                 class="rounded-circle shadow-sm object-fit-cover border"
+                                                 style="width: 50px; height: 50px;" />
+                                        </td>
+
+                                        <!-- Name -->
+                                        <td class="py-3 fw-semibold text-dark">
+                                            @author.Name
+                                        </td>
+
+                                        <!-- Biography snippet -->
+                                        <td class="py-3 text-muted small">
+                                            @(author.Biography?.Length > 40 ? 
+                                            author.Biography.Substring(0, 40) + "..." : author.Biography)
+                                        </td>
+
+                                        <!-- Actions -->
+                                        <td class="text-center py-3">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a asp-area="Admin"
+                                                   asp-controller="Author"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@author.Id"
+                                                   class="btn btn-sm btn-outline-secondary border-0 bg-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm"
+                                                   title="Edit Author"
+                                                   style="width: 36px; height: 36px;">
+                                                    <i class="bi bi-pencil-square text-warning"></i>
+                                                </a>
+
+                                                <form method="post"
+                                                      asp-area="Admin"
+                                                      asp-controller="Author"
+                                                      asp-action="Delete"
+                                                      asp-route-id="@author.Id"
+                                                      class="delete-form d-inline">
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-secondary border-0 bg-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm delete-form"
+                                                            title="Delete Author"
+                                                            style="width: 36px; height: 36px;">
+                                                        <i class="bi bi-trash text-danger"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-5 my-3">
+                            <div class="mb-3">
+                                <span class="rounded-circle bg-light p-4 d-inline-block text-muted shadow-sm">
+                                    <i class="bi bi-person-slash display-5"></i>
+                                </span>
+                            </div>
+                            <h5 class="fw-bold text-dark">No Authors Found</h5>
+                            <p class="text-muted small mb-4">Start building your library catalog by adding your first author profile.</p>
+                            <a asp-action="Add" class="btn btn-primary px-4 rounded-pill shadow-sm">
+                                <i class="bi bi-plus-lg me-2"></i> Add Author
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            $('.delete-form').on('submit', function(e) {
+                e.preventDefault();
+                var form = this;
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this Author.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then(function(result) {
+
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+
+                });
+            });
+        });
+    </script>
+}

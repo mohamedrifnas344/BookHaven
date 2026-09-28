@@ -1,0 +1,217 @@
+﻿@model List<BookShop.Application.ViewModels.Order.OrderResponseVM>
+@using BookShop.Domain.Enums
+
+@{
+    var totalOrdersCount = Model.Count;
+    var currentFilter = ViewBag.Status?.ToString() ?? "";
+}
+
+<div class="min-vh-100 py-5">
+    <div class="container-fluid px-4">
+
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 col-12 text-center text-md-start mb-3 mb-md-0">
+                <span class="text-uppercase text-muted font-monospace small fw-bold">Operations Dashboard</span>
+                <h1 class="h2 text-dark fw-semibold mb-1">Orders</h1>
+                <p class="text-secondary small mb-0">Track customer processing timeline, totals, and logistics status.</p>
+            </div>
+        </div>
+
+        <!-- Order Status Navigation Tabs / Filters -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 p-2 bg-white">
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <a asp-area="Admin" asp-controller="Order" asp-action="Index"
+                           class="btn btn-sm rounded-pill px-3 font-monospace fw-semibold
+                            @(string.IsNullOrEmpty(currentFilter) ? "btn-dark" : "btn-light text-secondary")">
+                            All Orders
+                        </a>
+                        @foreach (OrderStatus statusEnum in Enum.GetValues(typeof(OrderStatus)))
+                        {
+                            // Compare against the enum string name since asp-route-status passes the name    
+                            var isActive = currentFilter.Equals(statusEnum.ToString(), StringComparison.OrdinalIgnoreCase);
+
+                            <a asp-area="Admin" asp-controller="Order" asp-action="Index" asp-route-status="@statusEnum"
+                               class="btn btn-sm rounded-pill px-3 font-monospace fw-semibold
+                                @(isActive ? "btn-dark" : "btn-light text-secondary")">
+                                @statusEnum.ToString()
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="d-flex justify-content-end mb-3">
+            <form asp-area="Admin"
+                  asp-controller="Order"
+                  asp-action="Index"
+                  method="get">
+
+                <div class="input-group" style="max-width: 350px;">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+
+                    <input type="text"
+                           id="orderSearch"
+                           name="search"
+                           value="@ViewBag.search"
+                           class="form-control border-start-0"
+                           placeholder="Search orders..." />
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> Search
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+            <div class="card-body p-0">
+                @if (totalOrdersCount == 0)
+                {
+                    <div class="text-center py-5 my-4">
+                        <div class="bg-light d-inline-block p-4 rounded-circle mb-3">
+                            <i class="bi bi-folder2-open text-muted display-6"></i>
+                        </div>
+                        <h5 class="text-dark fw-bold">No Orders found</h5>
+                        <p class="text-muted small mx-auto">
+                            We couldn't locate any items on file that fit the active filter set.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead>
+                                <tr class="border-bottom border-info text-muted text-uppercase font-monospace bg-light">
+                                    <th class="ps-4 py-3">Reference Id</th>
+                                    <th class="py-3">Ordered</th>
+                                    <th class="py-3">Customer Name</th>
+                                    <th class="py-3 text-center">Financial Value</th>
+                                    <th class="py-3 text-center" style="min-width: 180px;">Order Status</th>
+                                    <th class="py-3 text-center">Payment Method</th>
+                                    <th class="py-3 text-center">Payment Status</th>
+                                    <th class="py-3 pe-4 text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model)
+                                {
+                                    <tr class="align-middle border-bottom border-light">
+                                        <td class="ps-4 py-3 font-monospace fw-bold text-dark">
+                                            <span class="text-secondary opacity-75">#</span> @order.Id.ToString("N")[^6..].ToUpper()...
+                                        </td>
+                                        <td class="text-secondary">
+                                            @order.OrderDate.ToString("MMM dd, yyyy")
+                                            <span class="d-block text-muted small">@order.OrderDate.ToString("t")</span>
+                                        </td>
+                                        <td>
+                                            @order.FirstName @order.LastName
+                                        </td>
+                                        <td class="text-center fw-bold text-dark font-monospace">
+                                            $@order.GrandTotal.ToString("F2")
+                                        </td>
+                                        <td class="text-center">
+                                            <form asp-area="Admin" asp-controller="Order" asp-action="UpdateStatus" method="post">
+                                                <input type="hidden" name="orderId" value="@order.Id" />                               
+                                                <select name="status" class="form-select-sm rounded-pill font-monospace 
+                                                fw-semibold px-3 order-status-select">
+                                                    @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                                                    {
+                                                        <option value="@((int)status)" 
+                                                            selected="@(order.OrderStatus == status ? "selected" : null)">
+                                                            @status.ToString()
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td class="text-center font-monospace">
+                                            <span class="badge bg-light text-dark border px-2 py-1 rounded-2 fw-semibold">
+                                                @order.PaymentMethod
+                                            </span>
+                                        </td>
+                                        <td class="text-center font-monospace">
+                                            <span class="badge bg-secondary px-2 py-1 rounded-2 fw-semibold">
+                                                @order.PaymentStatus
+                                            </span>
+                                        </td>
+                                        <td class="pe-1 py-3">
+                                            <a asp-area="Admin" asp-controller="Order"
+                                               asp-action="Details" asp-route-orderId="@order.Id"
+                                               class="btn btn-sm btn-outline-dark px-3 py-1 text-nowrap">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!-- Dynamic Pagination -->
+                        @if (ViewBag.TotalPages > 1)
+                        {
+                            <nav class="d-flex justify-content-center pt-4">
+                                <ul class="pagination">
+                                    <!-- Previous Button -->
+                                    <li class="p-1 page-item @(!ViewBag.HasPreviousPage ? "disabled" : "")">
+                                        <a class="page-link"
+                                           asp-area="Admin"
+                                           asp-controller="Book"
+                                           asp-action="Index"
+                                           asp-route-pageNumber="@(ViewBag.PageNumber - 1)"
+                                           asp-route-search="@ViewBag.Search">
+                                            Previous
+                                        </a>
+                                    </li>
+
+                                    <!-- Page Number Links -->
+                                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                    {
+                                        <li class="p-1 page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                                            <a class="page-link"
+                                               asp-area="Admin"
+                                               asp-controller="Book"
+                                               asp-action="Index"
+                                               asp-route-pageNumber="@i"
+                                               asp-route-search="@ViewBag.Search">
+                                                @i
+                                            </a>
+                                        </li>
+                                    }
+
+                                    <!-- Next Button -->
+                                    <li class="p-1 page-item @(!ViewBag.HasNextPage ? "disabled" : "")">
+                                        <a class="page-link"
+                                           asp-area="Admin"
+                                           asp-controller="Book"
+                                           asp-action="Index"
+                                           asp-route-pageNumber="@(ViewBag.PageNumber + 1)"
+                                           asp-route-search="@ViewBag.Search">
+                                            Next
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.order-status-select').change(function() {
+                $(this).closest("form").submit();
+            });
+        });
+    </script>
+}

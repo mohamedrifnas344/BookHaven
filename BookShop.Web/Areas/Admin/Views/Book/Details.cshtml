@@ -1,0 +1,280 @@
+﻿@model BookShop.Application.ViewModels.Book.BookResponseVM
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-3"
+                      style="width: 38px; height: 38px;">
+                    <i class="bi bi-book fs-5"></i>
+                </span>
+
+                <span class="text-uppercase text-muted fw-semibold small">
+                    Catalog Management
+                </span>
+            </div>
+
+            <h2 class="fw-bold text-dark mb-0">
+                Book Details
+            </h2>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Book"
+           asp-action="Index"
+           class="btn btn-light border rounded-3 px-4 py-1 text-primary fw-semibold d-inline-flex align-items-center gap-2">
+            <i class="bi bi-arrow-left"></i>
+            Back to Books
+        </a>
+
+    </div>
+
+    <!-- Main Book Card -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+        <div class="row g-0">
+
+            <!-- Book Cover Section -->
+            <div class="col-lg-4 bg-light border-end">
+
+                <div class="h-100 d-flex flex-column align-items-center justify-content-center p-4 p-lg-5">
+
+                    <!-- Cover -->
+                    <div class="bg-white rounded-4 shadow-sm p-3 mb-4"
+                         style="max-width: 280px;">
+
+                        <img src="@Model.ImageUrl"
+                             alt="@Model.Title"
+                             class="img-fluid rounded-3 d-block"
+                             style="width: 100%; max-height: 390px; object-fit: contain;" />
+
+                    </div>
+
+                    <!-- Status Badges -->
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+
+                        @if (Model.IsFeatured)
+                        {
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold">
+                                <i class="bi bi-star-fill me-1"></i>
+                                Featured
+                            </span>
+                        }
+
+                        @if (Model.IsNew)
+                        {
+                            <span class="badge bg-info text-white rounded-pill px-3 py-2 fw-semibold">
+                                <i class="bi bi-stars me-1"></i>
+                                New Arrival
+                            </span>
+                        }
+
+                        @if (!Model.IsFeatured && !Model.IsNew)
+                        {
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2 fw-semibold">
+                                Standard Book
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Information -->
+            <div class="col-lg-8">
+
+                <div class="p-4 p-lg-5">
+
+                    <!-- Category + Published Date -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-3 py-2 fw-semibold">
+                            <i class="bi bi-tag-fill me-1"></i>
+                            @Model.CategoryName
+                        </span>
+
+                        <span class="text-muted small">
+                            <i class="bi bi-calendar3 me-1"></i>
+                            @Model.PublishedDate.ToString("MMMM dd, yyyy")
+                        </span>
+
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="fw-bold text-dark mb-2">
+                        @Model.Title
+                    </h1>
+
+                    <!-- Author -->
+                    <p class="text-muted fs-5 mb-4">
+                        Written by
+                        <span class="fw-semibold text-dark">
+                            @Model.AuthorName
+                        </span>
+                    </p>
+
+                    <!-- Price -->
+                    <div class="border rounded-4 p-4 mb-4">
+                        <div class="row g-4 align-items-center">
+
+                            <!-- Price -->
+                            <div class="col-md-6">
+
+                                <span class="text-uppercase text-muted small fw-bold d-block mb-2">
+                                    Price
+                                </span>
+
+                                @if (Model.SpecialPrice.HasValue &&
+                                     Model.SpecialPrice < Model.Price)
+                                {
+                                    <div class="d-flex align-items-center gap-3">
+
+                                        <span class="fs-2 fw-bold text-success">
+                                            $@Model.SpecialPrice.Value.ToString("F2")
+                                        </span>
+
+                                        <span class="text-muted text-decoration-line-through">
+                                            $@Model.Price.ToString("F2")
+                                        </span>
+
+                                    </div>
+
+                                    <span class="badge bg-success bg-opacity-10 text-success mt-2">
+                                        Special Price
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="fs-2 fw-bold text-dark">
+                                        $@Model.Price.ToString("F2")
+                                    </span>
+                                }
+
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6">
+
+                                <span class="text-uppercase text-muted small fw-bold d-block mb-2">
+                                    Inventory
+                                </span>
+
+                                @if (Model.Stock > 0)
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+
+                                        <span class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success rounded-circle"
+                                              style="width: 40px; height: 40px;">
+                                            <i class="bi bi-check-lg"></i>
+                                        </span>
+
+                                        <div>
+                                            <div class="fw-bold text-dark">
+                                                @Model.Stock Units
+                                            </div>
+
+                                            <small class="text-success">
+                                                Available in stock
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+
+                                        <span class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle"
+                                              style="width: 40px; height: 40px;">
+                                            <i class="bi bi-x-lg"></i>
+                                        </span>
+
+                                        <div>
+                                            <div class="fw-bold text-dark">
+                                                Out of Stock
+                                            </div>
+
+                                            <small class="text-danger">
+                                                Currently unavailable
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Information -->
+                    <div class="row g-3">
+
+                        <div class="col-sm-4">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    ISBN
+                                </small>
+                                <span class="fw-semibold text-dark small">
+                                    @Model.ISBN
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    Pages
+                                </small>
+                                <span class="fw-semibold text-dark">
+                                    @Model.PageNumber
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="bg-light rounded-3 p-3 h-100">
+                                <small class="text-muted d-block mb-1">
+                                    Book ID
+                                </small>
+                                <span class="fw-semibold text-dark font-monospace small">
+                                    #@Model.Id
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-lg-5">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-3"
+                      style="width: 42px; height: 42px;">
+                    <i class="bi bi-file-text fs-5"></i>
+                </span>
+
+                <div>
+                    <h5 class="fw-bold text-dark mb-0">
+                        About This Book
+                    </h5>
+                    <small class="text-muted">
+                        Book description
+                    </small>
+                </div>
+            </div>
+            <div class="text-muted lh-lg"
+                 style="white-space: pre-line;">
+                @Model.Description
+            </div>
+        </div>
+    </div>
+</div>

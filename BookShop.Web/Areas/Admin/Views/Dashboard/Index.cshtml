@@ -1,0 +1,320 @@
+﻿@model BookShop.Application.ViewModels.Dashboard.DahsboardVM
+
+<div class="bg-light min-vh-100 py-4">
+    <div class="container-fluid px-4">
+
+        <!-- Top Header Bar -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom gap-3">
+            <div>
+                <span class="text-uppercase text-muted font-monospace small fw-bold">BookShop Management</span>
+                <h1 class="h3 fw-bold text-dark mb-0">Dashboard Overview</h1>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small font-monospace d-none d-sm-inline">
+                    <i class="bi bi-clock me-1"></i>Live Data
+                </span>
+                <button class="btn btn-white bg-white border shadow-sm btn-sm d-flex align-items-center gap-2 fw-semibold px-3 py-2 text-secondary rounded-pill" onclick="window.location.reload()">
+                    <i class="bi bi-arrow-clockwise text-dark"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Metric KPI Cards Grid -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-6 g-3 mb-4">
+            <!-- Total Revenue -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Revenue</span>
+                        <div class="p-2 bg-success-subtle text-success rounded-3">
+                            <i class="bi bi-wallet2 fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">$@Model.TotalRevenue.ToString("N2")</h3>
+                    <span class="text-success small fw-medium">
+                        <i class="bi bi-arrow-up-short"></i> Lifetime Gross
+                    </span>
+                </div>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Orders</span>
+                        <div class="p-2 bg-primary-subtle text-primary rounded-3">
+                            <i class="bi bi-bag-check fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">@Model.TotalOrders.ToString("N0")</h3>
+                    <span class="text-muted small fw-medium">Processed fulfillments</span>
+                </div>
+            </div>
+
+            <!-- Total Books / Menus -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Catalog</span>
+                        <div class="p-2 bg-warning-subtle text-warning rounded-3">
+                            <i class="bi bi-book fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">@Model.TotalBooks.ToString("N0")</h3>
+                    <span class="text-muted small fw-medium">Active Book Titles</span>
+                </div>
+            </div>
+
+            <!-- Total Authors -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Authors</span>
+                        <div class="p-2 bg-secondary-subtle text-secondary rounded-3">
+                            <i class="bi bi-pen fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">@Model.TotalAuthors.ToString("N0")</h3>
+                    <span class="text-muted small fw-medium">Registered Writers</span>
+                </div>
+            </div>
+
+            <!-- Total Categories -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Categories</span>
+                        <div class="p-2 bg-info-subtle text-info rounded-3">
+                            <i class="bi bi-grid fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">@Model.TotalCategories.ToString("N0")</h3>
+                    <span class="text-muted small fw-medium">Genres & Sections</span>
+                </div>
+            </div>
+
+            <!-- Total Users -->
+            <div class="col">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="text-muted small fw-semibold text-uppercase font-monospace">Users</span>
+                        <div class="p-2 bg-danger-subtle text-danger rounded-3">
+                            <i class="bi bi-people fs-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark fs-4">@Model.TotalUsers.ToString("N0")</h3>
+                    <span class="text-muted small fw-medium">Registered Accounts</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1: Line Analytics -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">Revenue Performance</h5>
+                            <p class="text-muted small mb-0">Trailing 6-month earnings overview</p>
+                        </div>
+                        <span class="badge bg-light text-secondary border font-monospace px-2 py-1">USD ($)</span>
+                    </div>
+                    <div class="position-relative" style="height: 290px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="fw-bold text-dark mb-1">Order Demand Trend</h5>
+                            <p class="text-muted small mb-0">Trailing 6-month processing volume</p>
+                        </div>
+                        <span class="badge bg-light text-secondary border font-monospace px-2 py-1">Volume</span>
+                    </div>
+                    <div class="position-relative" style="height: 290px;">
+                        <canvas id="orderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2: Distribution Doughnuts -->
+        <div class="row g-4">
+            <div class="col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-dark mb-1">Order Status Breakdown</h5>
+                        <p class="text-muted small mb-0">Current logistics phase distribution</p>
+                    </div>
+                    <div class="position-relative d-flex justify-content-center align-items-center" style="height: 260px;">
+                        <canvas id="orderPiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-dark mb-1">Payment Status Breakdown</h5>
+                        <p class="text-muted small mb-0">Financial transaction clearances</p>
+                    </div>
+                    <div class="position-relative d-flex justify-content-center align-items-center" style="height: 260px;">
+                        <canvas id="paymentPiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var labels = [];
+            let today = new Date();
+            for (let i = 5; i >= 0; i--) {
+                let d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                labels.push(monthNames[d.getMonth()] + " " + d.getFullYear());
+            }
+
+            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            Chart.defaults.plugins.legend.labels.boxWidth = 8;
+            Chart.defaults.plugins.legend.labels.font = { size: 12 };
+
+            // Revenue Chart
+            new Chart($('#revenueChart')[0].getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: @Html.Raw(Json.Serialize(Model.MonthlyRevenue)),
+                        backgroundColor: 'rgba(25, 135, 84, 0.08)',
+                        borderColor: '#198754',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#198754',
+                        pointRadius: 3,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // Order Chart
+            new Chart($('#orderChart')[0].getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Orders',
+                        data: @Html.Raw(Json.Serialize(Model.MonthlyOrders)),
+                        backgroundColor: 'rgba(13, 110, 253, 0.08)',
+                        borderColor: '#0d6efd',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#0d6efd',
+                        pointRadius: 3,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // Order Pie/Doughnut Chart (Including Shipped)
+            new Chart($('#orderPiChart')[0].getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled'],
+                    datasets: [{
+                        data: [
+                            @Model.PendingOrders, 
+                            @Model.ConfirmOrders, 
+                            @Model.PackedOrders, 
+                            @Model.ShippedOrders, 
+                            @Model.DeliveredOrders, 
+                            @Model.CancellOrders
+                        ],
+                        backgroundColor: ['#6c757d', '#0d6efd', '#ffc107', '#0dcaf0', '#198754', '#dc3545'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { padding: 15 }
+                        }
+                    }
+                }
+            });
+
+            // Payment Pie/Doughnut Chart
+            new Chart($('#paymentPiChart')[0].getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Success', 'Pending', 'Failed'],
+                    datasets: [{
+                        data: [@Model.ConfirmPayments, @Model.PendingPaymnts, @Model.CancellPayments],
+                        backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { padding: 15 }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
