@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "ADMIN")]
     public class AuthorController : Controller
     {
         private readonly IAuthorRepository _authorRepository;

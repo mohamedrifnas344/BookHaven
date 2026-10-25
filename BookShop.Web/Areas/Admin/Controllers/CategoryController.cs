@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "ADMIN")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;

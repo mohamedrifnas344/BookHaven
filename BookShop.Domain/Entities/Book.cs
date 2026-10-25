@@ -29,7 +29,5 @@ namespace BookShop.Domain.Entities
         // Author
         public Guid AuthorId { get; set; }
         public Author Author { get; set; } = null!;
-
-        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }

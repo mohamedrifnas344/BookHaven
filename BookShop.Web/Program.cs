@@ -1,52 +1,25 @@
-using BookShop.Domain.Entities;
-using BookShop.Infrastructure;
+using BookShop.Application.Interfaces;
+using BookShop.Application.IServices;
 using BookShop.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Stripe;
+using BookShop.Infrastructure.Repositories;
+using BookShop.Infrastructure.Services.CloudinaryService;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.InfrastructureConfiguration(builder.Configuration);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<AppUser, IdentityRole>(option =>
-{
-    option.Password.RequiredLength = 6;
-    option.Password.RequireUppercase = false;
-    option.Password.RequireLowercase = false;
-    option.Password.RequireNonAlphanumeric = false;
-    option.Password.RequireDigit = false;
-})
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-});
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<ICloudinaryUploadService , CloudinaryUploadService>();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var service = scope.ServiceProvider;
-    try
-    {
-        var userManager = service.GetRequiredService<UserManager<AppUser>>();
-        var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
-        var loggerFactory = service.GetRequiredService<ILoggerFactory>();
-
-        await IdentitySeeder.LoadData(userManager, roleManager, loggerFactory);
-    }
-    catch (Exception ex)
-    {
-        var logger = app.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occured while seeding identity data");
-    }
-}
 
 
 // Configure the HTTP request pipeline.
@@ -59,11 +32,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-StripeConfiguration.ApiKey = builder.Configuration.GetSection("StripeSettings:SecretKey").Get<string>();
-
 app.UseRouting();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
